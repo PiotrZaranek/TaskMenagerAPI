@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using TaskMenager.Domain.Exceptions;
 using TaskMenager.Domain.Model;
 using TaskMenager.Model.Interface;
 
@@ -54,7 +55,7 @@ namespace TaskMenager.Infrastructure.Repository
 
             if (todo == null)
             {
-                throw new Exception();
+                throw new ToDoNotFoundException();
             }
             else
             {
