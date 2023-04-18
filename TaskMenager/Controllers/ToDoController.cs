@@ -6,8 +6,8 @@ using TaskMenager.Aplication.ViewModel;
 
 namespace TaskMenager.API.Controllers
 {
-    [Route("api/[controller]/[action]")]
     [ApiController]
+    [Route("api/[controller]/[action]")]
     public class ToDoController : ControllerBase
     {
         private IToDoService _toDoService;
@@ -18,43 +18,49 @@ namespace TaskMenager.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllToDos()
+        public ListToDoForListVm GetAllToDos()
         {
-            return Ok(_toDoService.GetAll());
+            return _toDoService.GetAll();
         }
 
         [HttpPost]
-        public IActionResult NewToDo(NewToDoVm todo)
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<string> NewToDo(NewToDoVm todo)
         {
             try
             {
                 _toDoService.Add(todo);
             }            
-            catch
+            catch (Exception ex)
             {
-                return BadRequest("Coś poszło nie tak! :(");
+                return BadRequest(ex.Message);
             }
 
-            return Ok("Dodano nowe zadanie do listy!");
+            return "Dodano nowe zadanie";
         }
 
         [HttpDelete]
-        public IActionResult Delete(int todoId)
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<string> Delete(int todoId)
         { 
             try
             {
                 _toDoService.Delete(todoId);
             }
-            catch
+            catch (Exception ex)
             { 
-                return BadRequest("Nie udało się usunąć zadania!");
+                return BadRequest(ex.Message);
             }
             
-            return Ok("Usunięto rekord");
+            return "Usunięto zadanie";
         }
 
         [HttpGet]
-        public IActionResult Details(int todoId)
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<DetailsToDoVm> Details(int todoId)
         {
             DetailsToDoVm todo;
 
@@ -62,57 +68,63 @@ namespace TaskMenager.API.Controllers
             {
                 todo = _toDoService.Details(todoId);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest("Coś poszło nie tak! :(");
+                return BadRequest(ex.Message);
             }
 
-            return Ok(todo);
+            return todo;
         }
 
         [HttpPatch]
-        public IActionResult IsDone(int todoId)
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<string> IsDone(int todoId)
         { 
             try
             {
                 _toDoService.IsDone(todoId);
             }
-            catch 
+            catch (Exception ex)
             {
-                return BadRequest("Coś poszło nie tak!");                    
+                return BadRequest(ex.Message);                    
             }
 
-            return Ok($"Zadanie o id {todoId} zostało oznaczone jako wykonane");
+            return $"Zadanie o id {todoId} zostało oznaczone jako wykonane";
         }
 
         [HttpGet]
-        public IActionResult Update(int todoId)
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<UpdateToDoVm> Update(int todoId)
         {
             UpdateToDoVm todo;
             try 
             { 
                 todo = _toDoService.GetToDoToUpdate(todoId);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest("Coś poszło nie tak! :(");
+                return BadRequest(ex.Message);
             }
 
-            return Ok(todo);
+            return todo;
         }
 
-        [HttpPost]
-        public IActionResult Update(UpdateToDoVm todo)
+        [HttpPatch]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<string> Update(UpdateToDoVm todo)
         {
             try
             {
                 _toDoService.Update(todo);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest("Coś poszło nie tak! :(");
+                return BadRequest(ex.Message);
             }            
-            return Ok("Zaktualizowano zadanie!");
+            return "Zaktualizowano zadanie!";
         }
     }
 }
