@@ -25,9 +25,6 @@ namespace TaskMenager.Aplication.Service
 
         public ListToDoForListVm GetAll()
         {
-            var test = _toDoRepository.GetAll();
-            var type = test.GetType();
-
             var todos = _toDoRepository.GetAll().ProjectTo<ToDoForListVm>(_mapper.ConfigurationProvider).ToList();
 
             return CreateVm(todos);
